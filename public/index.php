@@ -41,23 +41,41 @@ if (isset($uri[2])) {
     $userId = (int) $uri[2];
 }
 
-/* echo "<h1>Agenda de contactos</h1>";
-
-echo DBHOST;
-echo "<br>";
-echo DBUSER;
-echo "<br>";
-echo DBPASS;
-echo "<br>";
-echo DBPORT;
-echo "<br>";
-echo DBNAME;
-echo "<br>";
+//Proceso de login
+if ($request == '/login') {
+    $auth = new AuthController($requestMethod);
+    if (!$auth->loginFromRequest()){
+        exit(http_response_code(401));
+    };
+}
 
 
-$conatctos = new ContactosController($_SERVER['REQUEST_METHOD'], $_GET['id']);
+// Control de login
+$input = (array) json_decode(file_get_contents('php://input'), TRUE);
+$autHeader =  $_SERVER['HTTP_AUTHORIZATION'];
 
-echo $conatctos->processRequest(); */
+$arr = explode(" ",$autHeader);
+$jwt = $arr[1];
+
+if($jwt){
+
+    try {
+        //Si no es posible decodificar el token generamos un error
+        //Se podría crear en la clase un método de verificación. 
+        $decoded = (JWT::decode($jwt, new Key(KEY,'HS256')));
+    } catch (Exception $e){
+      
+      echo json_encode(array(
+           "message" => "Access denied.",
+           "error" => $e->getMessage()));
+      exit(http_response_code(401));
+   
+  }
+}
+
+
+
+
 
 if ($uri[1] !== 'contactos') {
     header('HTTP/1.1 404 Not Found');

@@ -3,8 +3,8 @@ namespace App\Controllers;
 
 use App\Models\Contactos;
 
-class ContactosController
-{
+class ContactosController{
+    
     private $requestMethod;
     private $userId;
     private $contactos;
@@ -106,9 +106,7 @@ class ContactosController
     private function unprocessableEntityResponse()
     {
         $response['status_code_header'] = 'HTTP/1.1 422 Unprocessable Entity'
-        $response['body'] = json_encode([
-            'error' => 'Hay errores en el formato de entrada'
-        ]);
+        $response['body'] = json_encode(['error' => 'Hay errores en el formato de entrada']);
         return $response;
     }
 
