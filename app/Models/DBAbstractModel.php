@@ -1,6 +1,9 @@
 <?php
 namespace App\Models;
 
+use PDO;
+use PDOException;
+
 
 abstract class DBAbstractModel
 {
@@ -8,7 +11,7 @@ abstract class DBAbstractModel
     private static $db_user = DBUSER;
     private static $db_pass = DBPASS;
     private static $db_name = DBNAME;
-    //private static $db_port = DBPORT;
+    private static $db_port = DBPORT;
 
 
     protected $mensaje = '';
@@ -72,6 +75,7 @@ abstract class DBAbstractModel
             printf("Error en consulta: %s\n" , $e->getMessage());
       }
     }
+    $this->close_connection();
 
     //return $_result;
    }

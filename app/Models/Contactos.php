@@ -1,13 +1,14 @@
 <?php
-namespace App\Models;
-
 /**
  * Clase Contactos
  *
  * @author Javier Fernández Rubio
  */
-require 'DBAbstractModel.php';
-class Contactos extends DBAbstractModel {
+namespace App\Models;
+
+//require 'DBAbstractModel.php';
+class Contactos extends DBAbstractModel
+{
     // Modelo singleton
     private static $instancia;
     public static function getInstancia()
@@ -24,56 +25,17 @@ class Contactos extends DBAbstractModel {
         trigger_error('La clonación no es permitida!.', E_USER_ERROR);
     }
 
-    public function set($sh_data= array())
-    {
-        foreach ($sh_data as $key => $value) {
-            $$key = $value;
-        }
-        $this->query = "INSERT INTO contactos (nombre, apellidos, telefono, email, direccion, ciudad, provincia, cp, pais, observaciones)
-            VALUES ('$nombre', '$apellidos', '$telefono', '$email', '$direccion', '$ciudad', '$provincia', '$cp', '$pais', '$observaciones')";
-        $this->execute_single_query();
-    }
-
-    private $id;
-    private $nombre;
-    private $telefono;
-    private $email;
-    private $created_at;
-    private $updated_at;
-
     function _construct()
     {
-        $this->db_name = 'bd_contactos';
     }
 
-    public function setNombre($nombre)
+    public function get($id = '')
     {
-        $this->nombre = $nombre;
-    }
-
-    public  function setTelefono($telefono)
-    {
-        $this->telefono = $telefono;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    public function getID($id = '')
-    {
-        if ($id != '') {
-            $this->query = "SELECT * FROM contactos WHERE id = :id";
-            $this->parametros['id'] = $id;
-            $this->get_results_from_query();
-            if (count($this->rows) == 1) {
-                foreach ($this->rows[0] as $propiedad => $valor) {
-                    $this->$propiedad = $valor;
-                }
-                return true;
-            }
-        }
+        $this->query = "SELECT * FROM contactos
+    WHERE id = :id";
+        $this->parametros['id'] = $id;
+        $this->get_results_from_query();
+        return $this->rows;
     }
 
     public function getAll()
@@ -83,6 +45,28 @@ class Contactos extends DBAbstractModel {
         return $this->rows;
     }
 
-    
+    public function set($data_array = []){
+        foreach ($data_array as $key => $value) {
+            $$key = $value;
+        }
+        $this->query = "INSERT INTO contactos VALUES(null, :nombre, :telefono, :email)";
+        $this->execute_single_query(); 
+    }
+
+    public function update($id = '', $data_array = []){
+        foreach ($data_array as $key => $value) {
+            $$key = $value;
+        }
+        $this->query = "UPDATE contactos SET nombre = :nombre, telefono = :telefono, email = :email WHERE id = :id";
+        $this->parametros['id'] = $id;
+        $this->execute_single_query(); 
+    }
+
+    public function delete($id = ''){
+        $this->query = "DELETE FROM contactos WHERE id = :id";
+        $this->parametros['id'] = $id;
+        $this->execute_single_query(); 
+    }
+
 
 }

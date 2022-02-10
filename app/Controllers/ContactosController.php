@@ -1,4 +1,9 @@
 <?php
+/**
+ * 
+ * 
+ * 
+ */
 namespace App\Controllers;
 
 use App\Models\Contactos;
@@ -14,7 +19,7 @@ class ContactosController{
    
         $this->requestMethod = $requestMethod;
         $this->userId = $userId;
-        $this->contactos = contactos::getInstancia();
+        $this->contactos = Contactos::getInstancia();
     }
 
     public function processRequest()
@@ -100,15 +105,26 @@ class ContactosController{
         return $response;
     }
 
+    private function deleteContactos($id)
+    {
+        $result = $this->contactos->get($id);
+        if (! $result) {
+            return $this->notFoundResponse();
+        }
+        $this->contactos->delete($id);
+        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $response['body'] = null;
+        return $response;
+    }
 
 
 
-    private function unprocessableEntityResponse()
+    /* private function unprocessableEntityResponse()
     {
         $response['status_code_header'] = 'HTTP/1.1 422 Unprocessable Entity'
         $response['body'] = json_encode(['error' => 'Hay errores en el formato de entrada']);
         return $response;
-    }
+    } */
 
 
     private function notFoundResponse()

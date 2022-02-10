@@ -3,9 +3,9 @@ namespace App\Controllers;
 
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\key;
-use App\Models\Ususarios;
+use App\Models\Usuarios;
 
-class AuthCrontroller {
+class AuthController {
    
     private $requestMethod;
     private $userId;
@@ -15,18 +15,18 @@ class AuthCrontroller {
     public function __construct($requestMethod)
     {
         $this->requestMethod = $requestMethod;
-        $this->users = Ususarios::getInstancia();
+        $this->users = Usuarios::getInstancia();
     }
 
     public function loginFromRequest()
     {
         $input = (array) json_decode(file_get_contents('php://input'), true);
-
+        //var_dump($input);
         $usuario = $input['usuario'];
         $password = $input['password'];
         $dataUser = $this->users->login($usuario, $password);
         if ($dataUser) {
-            /* $key = "1234567890123456";*/
+            $key = "1234567890123456";
             $issuer_claim = "http://apirestcontactos.local"; // this can be the servername
             $audience_claim = "http://apirestcontactos.local";
             $issuedat_claim = time(); // issued at

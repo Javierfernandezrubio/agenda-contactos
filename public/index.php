@@ -12,8 +12,11 @@ require '../vendor/autoload.php';
 require '../bootstrap.php';
 
 // Clases a usar
-//use App\Models\Contactos;
 use App\Controllers\ContactosController;
+use App\Controllers\AuthController;
+use App\Core\Router;
+use \Firebase\JWT\JWT;
+use \Firebase\JWT\Key;
 
 /* // Cabeceras
 header('Access-Control-Allow-Origin: *');
@@ -29,11 +32,13 @@ header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+// Recuperamos el método de la petición
+$requestMethod = $_SERVER['REQUEST_METHOD'];
+
 // Parseamos la dirección de entrada
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode('/', $request);
 
-$requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Datos de usuario en la url si existe. es opcional
 $userId = null;
@@ -41,7 +46,7 @@ if (isset($uri[2])) {
     $userId = (int) $uri[2];
 }
 
-//Proceso de login
+/* ===== Proceso de Login =====  */
 if ($request == '/login') {
     $auth = new AuthController($requestMethod);
     if (!$auth->loginFromRequest()){
@@ -49,10 +54,9 @@ if ($request == '/login') {
     };
 }
 
-
 // Control de login
 $input = (array) json_decode(file_get_contents('php://input'), TRUE);
-$autHeader =  $_SERVER['HTTP_AUTHORIZATION'];
+$autHeader = $_SERVER['HTTP_AUTHORIZATION'];
 
 $arr = explode(" ",$autHeader);
 $jwt = $arr[1];
@@ -72,18 +76,18 @@ if($jwt){
    
   }
 }
+// Si llega aquí 
 
 
 
 
-
-if ($uri[1] !== 'contactos') {
+/* if ($uri[1] !== 'contactos') {
     header('HTTP/1.1 404 Not Found');
     exit('404 Not Found');
 }
 
 $controller = new ContactosController($requestMethod, $userId);
-$controller->processRequest();
+$controller->processRequest(); */
 
 
 
@@ -95,6 +99,18 @@ $router->add(array(
     'action' => ContactosController::class));
 
 $route = $router->match($request);
+if ($route) {
+    $controllerName = $route['action'];
+    $controller = new $controllerName($requestMethod, $userId);
+    $controller->processRequest();
+} else {
+    echo "no ruta";
+    $response['status_code_header'] = 'HTTP/1.1 404 Not Found';
+    $response['body'] = null;
+    echo json_encode($response);
+}
+/*
+// Segunda posible solución
 if (route) {
     $controllerName = $route->getAction();
     $controller = new $controllerName($requestMethod, $userId);
@@ -106,3 +122,4 @@ if (route) {
     echo $response['body'];
     echo json_encode($response);
 }
+*/

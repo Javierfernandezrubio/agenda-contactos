@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-require 'DBAbstractModel.php';
+//require 'DBAbstractModel.php';
 
 class Usuarios extends DBAbstractModel {
     // Modelo singleton
@@ -22,7 +22,7 @@ class Usuarios extends DBAbstractModel {
 
     /* Funciones  */
     public function login($usuario,$password){
-        $this->query = "SELECT * FROM usuarios WHERE usuario = '$usuario' AND password = '$password'";
+        $this->query = "SELECT * FROM usuarios WHERE usuario = :usuario AND password = :password ";
         
         // Cargamos los parametros
         $this->parametros['usuario'] = $usuario;
@@ -44,8 +44,8 @@ class Usuarios extends DBAbstractModel {
     }
 
     // Creamos los métodos pero solo dejamos las declaraciones
-    public function get($id = '') {
-       /*  if ($id != '') {
+    /*public function get($id = '') {
+        if ($id != '') {
             $this->query = "SELECT * FROM usuarios WHERE id = :id";
             $this->parametros['id'] = $id;
             $this->get_results_from_query();
@@ -58,29 +58,46 @@ class Usuarios extends DBAbstractModel {
         } else {
             $this->mensaje = 'No se encontraron usuarios';
         }
-        return $this->rows; */
+        return $this->rows; 
     }
     public function set($sh_data= array())
     {
-        /* foreach ($sh_data as $key => $value) {
+        foreach ($sh_data as $key => $value) {
             $$key = $value;
         }
         $this->query = "INSERT INTO usuarios (usuario, password, nombre, apellidos, email, telefono, direccion, ciudad, provincia, cp, pais, observaciones)
             VALUES ('$usuario', '$password', '$nombre', '$apellidos', '$email', '$telefono', '$direccion', '$ciudad', '$provincia', '$cp', '$pais', '$observaciones')";
-        $this->execute_single_query(); */
+        $this->execute_single_query(); 
     }
     public function edit($sh_data= array())
     {
-        /* foreach ($sh_data as $key => $value) {
+         foreach ($sh_data as $key => $value) {
             $$key = $value;
         }
         $this->query = "UPDATE usuarios SET usuario = '$usuario', password = '$password', nombre = '$nombre', apellidos = '$apellidos', email = '$email', telefono = '$telefono', direccion = '$direccion', ciudad = '$ciudad', provincia = '$provincia', cp = '$cp', pais = '$pais', observaciones = '$observaciones' WHERE id = $id";
-        $this->execute_single_query(); */
+        $this->execute_single_query();
     }  
     public function delete($id = '')
     {
-       /*  $this->query = "DELETE FROM usuarios WHERE id = :id";
+        $this->query = "DELETE FROM usuarios WHERE id = :id";
         $this->parametros['id'] = $id;
-        $this->execute_single_query(); */
-    }
+        $this->execute_single_query(); 
+    }*/
+
+
+    public function get($id = ''){}
+
+    public function set() {}
+
+    public function read() {}
+
+    public function readAll() {}
+
+    public function insert() {}
+
+    public function update() {}
+
+    public function delete() {}
+
+    public function edit() {}
 }
